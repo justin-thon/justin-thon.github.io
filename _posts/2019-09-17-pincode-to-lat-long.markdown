@@ -55,10 +55,10 @@ print(find_str('Hellow World...', 'World'))
 #=> 7 (index of W)
 {% endhighlight %}
 
-Noting that the latitdue and longitude are separated by '%2C' and after a bit of trial and error (to extract exact index for these fields), we now can produce the full code below:
+Noting that the latitude and longitude are separated by '%2C' and after a bit of trial and error (to extract exact index for these fields), we now can produce the full code below:
 
 ### Full code: pincode_to_location.py ###
-{% highlight ruby %}
+{% highlight python %} 
 import requests
 import sys
 
@@ -95,7 +95,7 @@ def main():
 if __name__=="__main__":
 	main()
 
-{% endhighlight %}
+{% endhighlight %}  
 Note: User Agent in requests is not necessary, we just don't want the google server to see (at least make it obvious) that a python code is calling them :)
 
 Now we can run our program from the command prompt by typing:

@@ -106,44 +106,45 @@ In fact, if you enter <code class="highlighter-rouge">https://www.google.com/map
 <span class="nb">print</span><span class="p">(</span><span class="n">find_str</span><span class="p">(</span><span class="s1">'Hellow World...'</span><span class="p">,</span> <span class="s1">'World'</span><span class="p">))</span>
 <span class="c1">#=&gt; 7 (index of W)</span></code></pre></figure>
 
-<p>Noting that the latitdue and longitude are separated by ‘%2C’ and after a bit of trial and error (to extract exact index for these fields), we now can produce the full code below:</p>
+<p>Noting that the latitude and longitude are separated by ‘%2C’ and after a bit of trial and error (to extract exact index for these fields), we now can produce the full code below:</p>
 
 <h3 id="full-code-pincode_to_locationpy">Full code: pincode_to_location.py</h3>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">import</span> <span class="n">requests</span>
-<span class="n">import</span> <span class="n">sys</span>
+<figure class="highlight"><pre><code class="language-python" data-lang="python"> 
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="c1"># https://stackoverflow.com/questions/21842885/python-find-a-substring-in-a-string-and-returning-the-index-of-the-substring</span>
-<span class="c1"># Eric Fortin's answer</span>
-<span class="k">def</span> <span class="nf">find_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+<span class="c1"># https://stackoverflow.com/questions/21842885/python-find-a-substring-in-a-string-and-returning-the-index-of-the-substring
+# Eric Fortin's answer
+</span><span class="k">def</span> <span class="nf">find_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
     <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
-    <span class="k">if</span> <span class="n">char</span> <span class="k">in</span> <span class="ss">s:
-        </span><span class="n">c</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">for</span> <span class="n">ch</span> <span class="k">in</span> <span class="ss">s:
-            </span><span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="ss">c:
-                </span><span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">index</span><span class="ss">:index</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="n">char</span><span class="p">)]</span> <span class="o">==</span> <span class="ss">char:
-                    </span><span class="k">return</span> <span class="n">index</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="n">c</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">index</span><span class="p">:</span><span class="n">index</span><span class="o">+</span><span class="nb">len</span><span class="p">(</span><span class="n">char</span><span class="p">)]</span> <span class="o">==</span> <span class="n">char</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">index</span>
             <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
 
 
 <span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-	<span class="n">pin</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="nf">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-	<span class="n">r</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'https://www.google.com/maps/place/'</span><span class="o">+</span><span class="n">pin</span><span class="p">,</span>
+	<span class="n">pin</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+	<span class="n">r</span><span class="o">=</span><span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">'https://www.google.com/maps/place/'</span><span class="o">+</span><span class="n">pin</span><span class="p">,</span>
 		<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
-		<span class="s1">'User-Agent'</span><span class="p">:</span> <span class="s1">'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'</span>
+		<span class="s">'User-Agent'</span><span class="p">:</span> <span class="s">'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'</span>
 	    <span class="p">}</span>
 	    <span class="p">)</span>
-	<span class="n">page</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="nf">text</span>
-	<span class="n">s</span><span class="o">=</span><span class="s2">"https://maps.google.com/maps/api/staticmap?center"</span>
+	<span class="n">page</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span>
+	<span class="n">s</span><span class="o">=</span><span class="s">"https://maps.google.com/maps/api/staticmap?center"</span>
 	<span class="n">s_i</span> <span class="o">=</span> <span class="n">find_str</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="mi">50</span> 
 	<span class="n">s_e</span> <span class="o">=</span> <span class="n">s_i</span> <span class="o">+</span> <span class="mi">21</span>
-	<span class="n">loc</span> <span class="o">=</span> <span class="n">page</span><span class="p">[</span><span class="n">s_i</span><span class="ss">:s_e</span><span class="p">].</span><span class="nf">split</span><span class="p">(</span><span class="s1">'%2C'</span><span class="p">)</span>
-	<span class="nb">print</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+	<span class="n">loc</span> <span class="o">=</span> <span class="n">page</span><span class="p">[</span><span class="n">s_i</span><span class="p">:</span><span class="n">s_e</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'</span><span class="si">%2</span><span class="s">C'</span><span class="p">)</span>
+	<span class="k">print</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
 	<span class="k">return</span> <span class="n">loc</span>
 
 
-<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s2">"__main__"</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s">"__main__"</span><span class="p">:</span>
 	<span class="n">main</span><span class="p">()</span></code></pre></figure>
 
 <p>Note: User Agent in requests is not necessary, we just don’t want the google server to see (at least make it obvious) that a python code is calling them :)</p>
