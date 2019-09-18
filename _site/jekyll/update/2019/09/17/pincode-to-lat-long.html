@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>PIN Code to lat long</title>
+  <meta name="description" content="You want to find the latitude and longitude of a particular pin code. One straightforward way is to google along with the keywords.Say that of Connaught Plac...">
+
+  
+  
+  <link rel="stylesheet" href="http://localhost:4000/assets/style.css">
+
+  <link rel="canonical" href="http://localhost:4000/jekyll/update/2019/09/17/pincode-to-lat-long.html">
+  <link rel="alternate" type="application/rss+xml" title="Welcome to my page" href="http://localhost:4000/feed.xml">
+
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+</head>
+
+
+  <body>
+
+    <header class="border-bottom-thick px-2 clearfix">
+  <div class="left sm-width-full py-1 mt-1 mt-lg-0">
+    <a class="align-middle link-primary text-accent" href="/">
+      Welcome to my page
+    </a>
+  </div>
+  <div class="right sm-width-full">
+    <ul class="list-reset mt-lg-1 mb-2 mb-lg-1">
+      
+        
+      
+        
+        <li class="inline-block">
+          <a class="align-middle link-primary mr-2 mr-lg-0 ml-lg-2" href="/about/">
+            About
+          </a>
+        </li>
+        
+      
+        
+      
+        
+      
+        
+      
+    </ul>
+  </div>
+</header>
+
+
+    <div>
+      <article class="container px-2 mx-auto mb4" itemscope itemtype="http://schema.org/BlogPosting">
+  <h1 class="h0 col-9 sm-width-full py-4 mt-3 inline-block" itemprop="name headline">PIN Code to lat long</h1>
+  <div class="col-4 sm-width-full mt-1 border-top-thin ">
+    <p class="mb-3 py-2 bold h4"><time datetime="2019-09-17T16:52:03+05:30" itemprop="datePublished">Sep 17, 2019</time></p>
+  </div>
+
+  <div class="prose" itemprop="articleBody">
+      <p>You want to find the latitude and longitude of a particular pin code. One straightforward way is to google along with the keywords.
+Say that of Connaught Place, New Delhi that has pin code 110001.</p>
+
+<p><img src="/assets/cp.png" alt="Googoling pincode for lat long" /></p>
+
+<p>Hence, in theory you could scrape the html return page to get what we want i.e., lat/long.</p>
+
+<p>But there’s a more straight forward way. Just search the pin code in google maps.</p>
+
+<p><img src="/assets/cp1.png" alt="Googling pincode in maps" /></p>
+
+<p>Hence, the return url includes what we want <code class="highlighter-rouge">(latitude and longitude)</code>.
+In fact, if you enter <code class="highlighter-rouge">https://www.google.com/maps/place/110001</code> in your browser and hit return, it will lead to the same page above.</p>
+
+<p>Thus, our api just have to hit the above url for any given pin code.</p>
+
+<p>Below is the python code that does it:</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">import</span> <span class="n">requests</span>
+
+<span class="n">r</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'https://www.google.com/maps/place/110001'</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">r</span><span class="p">.</span><span class="nf">text</span><span class="p">)</span></code></pre></figure>
+
+<p>The latitude and longitude are in the response text as seen below.</p>
+
+<p><img src="/assets/pystatic.png" alt="Response text that contains lat/long" /></p>
+
+<p>Close inspection of this output text reveals the pattern <code class="highlighter-rouge">"https://maps.google.com/maps/api/staticmap?center=28.6327426%2C77.2195969&amp;amp;...</code>. We write a function that detects a substring and returns the index where it is found.</p>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="c1"># https://stackoverflow.com/questions/21842885/python-find-a-substring-in-a-string-and-returning-the-index-of-the-substring</span>
+<span class="c1"># Eric Fortin's answer</span>
+<span class="k">def</span> <span class="nf">find_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="k">in</span> <span class="ss">s:
+        </span><span class="n">c</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="k">in</span> <span class="ss">s:
+            </span><span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="ss">c:
+                </span><span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">index</span><span class="ss">:index</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="n">char</span><span class="p">)]</span> <span class="o">==</span> <span class="ss">char:
+                    </span><span class="k">return</span> <span class="n">index</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">find_str</span><span class="p">(</span><span class="s1">'Hellow World...'</span><span class="p">,</span> <span class="s1">'World'</span><span class="p">))</span>
+<span class="c1">#=&gt; 7 (index of W)</span></code></pre></figure>
+
+<p>Noting that the latitdue and longitude are separated by ‘%2C’ and after a bit of trial and error (to extract exact index for these fields), we now can produce the full code below:</p>
+
+<h3 id="full-code-pincode_to_locationpy">Full code: pincode_to_location.py</h3>
+
+<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="n">import</span> <span class="n">requests</span>
+<span class="n">import</span> <span class="n">sys</span>
+
+<span class="c1"># https://stackoverflow.com/questions/21842885/python-find-a-substring-in-a-string-and-returning-the-index-of-the-substring</span>
+<span class="c1"># Eric Fortin's answer</span>
+<span class="k">def</span> <span class="nf">find_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">char</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">char</span> <span class="k">in</span> <span class="ss">s:
+        </span><span class="n">c</span> <span class="o">=</span> <span class="n">char</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">ch</span> <span class="k">in</span> <span class="ss">s:
+            </span><span class="k">if</span> <span class="n">ch</span> <span class="o">==</span> <span class="ss">c:
+                </span><span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">index</span><span class="ss">:index</span><span class="o">+</span><span class="n">len</span><span class="p">(</span><span class="n">char</span><span class="p">)]</span> <span class="o">==</span> <span class="ss">char:
+                    </span><span class="k">return</span> <span class="n">index</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span>
+
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+	<span class="n">pin</span> <span class="o">=</span> <span class="n">sys</span><span class="p">.</span><span class="nf">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+	<span class="n">r</span><span class="o">=</span><span class="n">requests</span><span class="p">.</span><span class="nf">get</span><span class="p">(</span><span class="s1">'https://www.google.com/maps/place/'</span><span class="o">+</span><span class="n">pin</span><span class="p">,</span>
+		<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>
+		<span class="s1">'User-Agent'</span><span class="p">:</span> <span class="s1">'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'</span>
+	    <span class="p">}</span>
+	    <span class="p">)</span>
+	<span class="n">page</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="nf">text</span>
+	<span class="n">s</span><span class="o">=</span><span class="s2">"https://maps.google.com/maps/api/staticmap?center"</span>
+	<span class="n">s_i</span> <span class="o">=</span> <span class="n">find_str</span><span class="p">(</span><span class="n">page</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span> <span class="o">+</span> <span class="mi">50</span> 
+	<span class="n">s_e</span> <span class="o">=</span> <span class="n">s_i</span> <span class="o">+</span> <span class="mi">21</span>
+	<span class="n">loc</span> <span class="o">=</span> <span class="n">page</span><span class="p">[</span><span class="n">s_i</span><span class="ss">:s_e</span><span class="p">].</span><span class="nf">split</span><span class="p">(</span><span class="s1">'%2C'</span><span class="p">)</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">loc</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">loc</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span><span class="o">==</span><span class="s2">"__main__"</span><span class="p">:</span>
+	<span class="n">main</span><span class="p">()</span></code></pre></figure>
+
+<p>Note: User Agent in requests is not necessary, we just don’t want the google server to see (at least make it obvious) that a python code is calling them :)</p>
+
+<p>Now we can run our program from the command prompt by typing:</p>
+
+<h4 id="python-pincode_to_locationpy-110001-that-returns">‘python pincode_to_location.py 110001’ that returns:</h4>
+<p>[‘28.6327426’, ‘77.21959’]</p>
+
+  </div>
+
+</article>
+
+<div class="container mx-auto px-2 py-2 clearfix">
+  <!-- Use if you want to show previous and next for all posts. -->
+
+
+
+  <div class="col-4 sm-width-full left mr-lg-4 mt-3">
+    <a class="no-underline border-top-thin py-1 block" href="http://localhost:4000/data%20science/nlp/2019/09/02/welcome-to-jekyll.html">
+      <span class="h5 bold text-accent">Previous</span>
+      <p class="bold h3 link-primary mb-1">Welcome to Jekyll!</p>
+      <p>You’ll find this post in your _posts directory. Go ahead and edit it and re-build the site to see your...</p>
+    </a>
+  </div>
+  
+  
+
+</div>
+
+    </div>
+
+    <div class="border-top-thin clearfix mt-2 mt-lg-4">
+  <div class="container mx-auto px-2">
+    <p class="col-8 sm-width-full left py-2 mb-0">This project is maintained by <a class="text-accent" href="https://github.com/jekyll">jekyll</a></p>
+    <ul class="list-reset right clearfix sm-width-full py-2 mb-2 mb-lg-0">
+      <li class="inline-block mr-1">
+        <a href="https://twitter.com/share" class="twitter-share-button" data-hashtags="Welcome to my page">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      </li>
+      <li class="inline-block">
+        <a class="github-button" href="https://github.com/jekyll/" data-icon="octicon-star" data-count-href="jekyll//stargazers" data-count-api="/repos/jekyll/#stargazers_count" data-count-aria-label="# stargazers on GitHub" aria-label="Star jekyll/ on GitHub">Star</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+  </body>
+
+</html>
