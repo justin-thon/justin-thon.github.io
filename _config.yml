@@ -21,7 +21,7 @@
 title: Welcome to my page
 email: your-email@example.com
 description: >- # this means to ignore newlines until "baseurl:"
-  My name is Justin Thonzakhup. I am a data scientist with an obsessive interest in NLP.
+  My name is Justin Thonzakhup. I am a data scientist with research interest in NLP.
   I also play the guitar, football and a huge fan of Barcelona football club.
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
